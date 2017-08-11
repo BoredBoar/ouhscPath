@@ -1,79 +1,40 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" media='print'>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https://unpkg.com/vue"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
-        <style>
-
-        	body {
-        		margin: 40px 10px;
-        		padding: 0;
-        		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-        		font-size: 14px;
-        	}
-
-        	#calendar {
-        		max-width: 900px;
-        		margin: 0 auto;
-        	}
-
-        </style>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     </head>
 	<body>
-		Hello World!
-        <div id="app">
-          {{ message }}
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#">Brand</a>
+		    </div>
+			</div>
+		</nav>
+        <div id="app" class='container'>
+					<p>Hello World!</p>
+          <p>This is a test: <strong data-bind="text: hello"></strong></p>
         </div>
         <div id='calendar'></div>
 	</body>
 	<script>
-        $(document).ready(function() {
+	const ws = io();
+	ws.on('my other event', function (data) {
+		console.log(data);
+	});
 
-            // page is now ready, initialize the calendar...
+	function AppViewModel() {
+		this.hello = "Hello World";
 
+	}
 
-						var socket = io();
-
-            var app = new Vue({
-                el: '#app',
-                data: {
-                	message: 'Hello Vue!'
-                },
-								created: function() {
-									socket.on('connect', function() {
-										console.log('client connected');
-									});
-									$('#calendar').fullCalendar({
-											// put your options and callbacks here
-											header: {
-												left: 'prev,next today',
-												center: 'title',
-												right: 'month,basicWeek,basicDay'
-											},
-											defaultDate: '2017-05-12',
-											navLinks: true, // can click day/week names to navigate views
-											editable: true,
-											eventLimit: true, // allow "more" link when too many events
-											events: function(start, end, timezone, callback) {
-												socket.emit('get calendar', {data:'send me the calendar'});
-												events = [];
-												console.log("dynamic events!", start, end, timezone);
-												callback(events);
-											}
-									});
-									socket.on('calendar events', function(data){
-										$('#calendar').fullCalendar('renderEvents',data.events);
-									});
-								}
-            });
-
-        });
+	// Activates knockout.js
+	ko.applyBindings(new AppViewModel());
 	</script>
+
 </html>
