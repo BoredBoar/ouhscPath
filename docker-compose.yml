@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+
+    nginx:
+        build: ./rev-proxy
+        ports:
+          - "8089:8080"
+        networks:
+          - internal-net
+        depends_on:
+          - web
+
+    web:
+        build: ./web
+        networks:
+          - internal-net
+          - db-net
+        volumes:
+          - ./web/src:/proj/src
+        depends_on:
+          - db
+    db:
+        build: ./db
+        networks:
+          - db-net
+
+networks:
+    internal-net:
+      ipam:
+        config:
+          - subnet: 192.169.0.0/16
+    db-net:
+        ipam:
+          config:
+            - subnet: 192.170.0.0/16
