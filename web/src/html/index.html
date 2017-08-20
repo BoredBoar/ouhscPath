@@ -23,13 +23,18 @@
         <div id='calendar'></div>
 	</body>
 	<script>
-	const ws = io();
-	ws.on('my other event', function (data) {
-		console.log(data);
-	});
+
 
 	function AppViewModel() {
 		this.hello = "Hello World";
+		const ws = io();
+		ws.on('my other event', function (data) {
+			console.log(data);
+			ws.emit('getIHC');
+		});
+		ws.on('IHC_results', function(IHCs) {
+			console.log(IHCs);
+		})
 
 	}
 

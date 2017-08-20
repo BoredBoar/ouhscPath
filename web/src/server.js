@@ -6,6 +6,7 @@ const io = require('socket.io')(server);
 const connectionString = "postgres://new_user:new_pass@db/new_db";
 var db = massive.connectSync({connectionString : connectionString});
 require('./sockets.js')(io,db);
+require('./init_db.js')(db);
 
 app.get('/', function (req, res) {
   res.sendFile('/proj/src/html/index.html');

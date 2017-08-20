@@ -8,5 +8,14 @@ module.exports = function(io,db) {
       console.log('test message recieved: ' + msg);
     });
 
+    socket.on('getIHC', function() {
+      db.ihc_table.findDoc(function(err, res) {
+        if(err){console.log("err when geeting IHC:", err)}
+        else {
+          socket.emit("IHC_results", res);
+        }
+      });
+    });
+
   });
 };
